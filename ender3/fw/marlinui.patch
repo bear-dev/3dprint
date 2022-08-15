@@ -1,0 +1,11 @@
+--- download/Firmware/Marlin/src/lcd/marlinui.cpp	2022-01-31 15:03:38.000000000 -0700
++++ download/Firmware/Marlin/src/lcd/marlinui.cpp	2022-08-14 15:33:25.005235183 -0600
+@@ -1008,6 +1008,8 @@
+ 
+                   if (encoderStepRate >= ENCODER_100X_STEPS_PER_SEC)     encoderMultiplier = 100;
+                   else if (encoderStepRate >= ENCODER_10X_STEPS_PER_SEC) encoderMultiplier = 10;
++                  else if (encoderStepRate >= ENCODER_5X_STEPS_PER_SEC)  encoderMultiplier = 5;
++                  else if (encoderStepRate >= ENCODER_2X_STEPS_PER_SEC)  encoderMultiplier = 2;
+ 
+                   // Enable to output the encoder steps per second value
+                   //#define ENCODER_RATE_MULTIPLIER_DEBUG

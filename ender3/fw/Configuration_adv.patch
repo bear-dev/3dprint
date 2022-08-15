@@ -1,0 +1,11 @@
+--- download/Firmware/Marlin/Configuration_adv.h    2022-07-27 17:45:46.000000000 -0600
++++ download/Firmware/Marlin/Configuration_adv_new.h    2022-08-14 15:33:55.529285872 -0600
+@@ -1379,6 +1379,8 @@
+ // Change values more rapidly when the encoder is rotated faster
+ #define ENCODER_RATE_MULTIPLIER
+ #if ENABLED(ENCODER_RATE_MULTIPLIER)
++  #define ENCODER_2X_STEPS_PER_SEC    10
++  #define ENCODER_5X_STEPS_PER_SEC    20
+   #define ENCODER_10X_STEPS_PER_SEC   30  // (steps/s) Encoder rate for 10x speed
+   #define ENCODER_100X_STEPS_PER_SEC  80  // (steps/s) Encoder rate for 100x speed
+ #endif

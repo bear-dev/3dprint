@@ -19,7 +19,7 @@ Ender 3 board version is Creality3D v1.1.2. It is also called "Melzi" and uses t
 
 ![Ender 3 board](pics/Ender3_mb.jpg)
 
-I've tried several FW and ended up with TH3D Unified 2 firmware for "Melzi" board ([details](https://www.th3dstudio.com/hc/downloads/unified-2-firmware/creality/creality-boards-creality/creality-ender-3-firmware-melzi-board/)).
+I've tried several FW and ended up with TH3D Unified 2 firmware for "Melzi" board ([details](https://support.th3dstudio.com/helpcenter/creality-ender-3-8-bit-firmware/)).
 
 I use [Octoprint Firmware Updater](https://github.com/OctoPrint/OctoPrint-FirmwareUpdater/blob/master/README.md) to update the printer FW.
 

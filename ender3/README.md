@@ -22,12 +22,12 @@ It is also known as silent board and uses the 32-bit STM32 microcontroller inste
 
 ![Ender 3 board](pics/Ender3_mb_silent.jpg)
 
-I've tried several FW and ended up with TH3D Unified 2 firmware for v4.2.7 board ([details](https://support.th3dstudio.com/helpcenter/creality-ender-3-firmware-v4-2-7-board/)).
+I've tried several FW and ended up with Marlin 2 firmware for v4.2.7 board ([details](https://github.com/MarlinFirmware/Configurations/tree/release-2.1.2/config/examples/Creality/Ender-3/CrealityV427)).
 
 I use [Octoprint Firmware Updater](https://github.com/OctoPrint/OctoPrint-FirmwareUpdater/blob/master/README.md) to update the printer FW.
 
 ### Firmware configuration
 
 I prefer compiling FW using command line tools inside Python virtual environment.  
-There are several parameters to setup before flashing - [Configuration.h](fw/Configuration.h)  
-To build a new FW version simple run the script - [th3d_fw_build.sh](fw/th3d_fw_build.sh)
+There are several parameters to setup before flashing - [Configuration.h](fw/Configuration_Ender3.h)  
+To build a new FW version simple run the script - [marlin_fw_build.sh](fw/marlin_fw_build.sh)

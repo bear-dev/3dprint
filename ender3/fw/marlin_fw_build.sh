@@ -42,6 +42,7 @@ prepare_venv() {
   cp Configuration.patch Ender_bootscreen.h \
     Configuration_adv.patch marlinui.patch "$_"
 
+  # shellcheck source=/dev/null
   source "$VENV_HOME/bin/activate"
   python3 -m pip install --require-virtualenv -U platformio
 }
@@ -56,10 +57,12 @@ get_fw() {
 }
 
 build_fw() {
+  local fw_config fw_path fw_file
+
   echo "Building firmware..."
 
   cd "$VENV_HOME" || { echo "Can't change the directory. Exiting..."; exit 1; }
-  local fw_config="download/Marlin/Configuration.h"
+  fw_config="download/Marlin/Configuration.h"
 
   # By default Configuration.h is DOS text file
   dos2unix "$fw_config"
@@ -79,19 +82,22 @@ build_fw() {
     echo "Firmware build failure. Exiting..."
     return 1
   fi
-  mv download/.pio/build/STM32F103RE_creality/firmware*.bin \
-    "/tmp/firmware_${FW_VERSION}.bin"
-  echo "Firmware has been successfuly builded: $_"
+
+  fw_path="$(ls download/.pio/build/STM32F103RE_creality/firmware*.bin)"
+  fw_file="$(basename "$fw_path")"
+  cp "$fw_path" /tmp/"$fw_file"
+  
+  echo "Firmware has been successfuly built: $_"
 }
 
 main() {
   prepare_venv
   get_fw
   build_fw
-  read -n1 -r -p $'Do you wish to purge firmware build directory? [y/N]\n' answer
+  read -n1 -r -p $'Do you wish to purge firmware build directory? [Y/n]\n' answer
   case $answer in
-    [Yy] ) echo "Cleaning up ${VENV_HOME}"; purge_venv;;
-    * ) echo "Build directory ${VENV_HOME} has been left untouched"; exit 0;;
+    [Nn] ) echo "Build directory ${VENV_HOME} has been left untouched"; exit 0;;
+    * ) echo "Cleaning up ${VENV_HOME}"; purge_venv;;
   esac
 }
 

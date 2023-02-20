@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# The script is to build TH3D Unified 2 Firmware (based on Marlin 2.0) for 
+# The script is to build Marlin Firmware for 
 # Creality Ender 3 3D Printer.
 #
 # Style guide: https://google.github.io/styleguide/shellguide.html
@@ -8,12 +8,11 @@
 
 # shellcheck disable=SC1090
 
-readonly VENV_HOME="$HOME/th3d_fw_build"
-# TH3D FW releases link https://github.com/th3dstudio/UnifiedFirmware/releases
-readonly FW_FILE="TH3D_Unified2_Creality_Melzi.zip"
-readonly FW_VERSION="latest" # specific fw version, e.g., 2.49 or latest
-readonly FW_URL="https://github.com/th3dstudio/UnifiedFirmware/\
-releases/${FW_VERSION}/download/${FW_FILE}"
+readonly VENV_HOME="$HOME/marlin_fw_build"
+# Marlin FW releases link https://github.com/MarlinFirmware/Marlin/releases
+readonly FW_VERSION="2.1.2" # specific fw version, e.g., 2.1.2
+readonly FW_FILE="Marlin-${FW_VERSION}.tar.gz"
+readonly FW_URL="https://github.com/MarlinFirmware/Marlin/archive/refs/tags/${FW_VERSION}.tar.gz"
 
 purge_venv() {
   # If venv exists remove it
@@ -40,9 +39,10 @@ prepare_venv() {
   
   # Ender 3 firmware config copy
   mkdir "$VENV_HOME/fw_config/"
-  cp Configuration_Ender3.h Ender_bootscreen.h \
+  cp Configuration.patch Ender_bootscreen.h \
     Configuration_adv.patch marlinui.patch "$_"
 
+  # shellcheck source=/dev/null
   source "$VENV_HOME/bin/activate"
   python3 -m pip install --require-virtualenv -U platformio
 }
@@ -53,52 +53,51 @@ get_fw() {
   mkdir -p "$VENV_HOME/download"
   cd "$_" || { echo "Can't change the directory. Exiting..."; exit 1; }
   wget -q "$FW_URL" -O "${FW_FILE}"
-  unzip -q "${FW_FILE}"
+  tar -zx --strip-components=1 -f "${FW_FILE}"
 }
 
 build_fw() {
+  local fw_config fw_path fw_file
+
   echo "Building firmware..."
 
   cd "$VENV_HOME" || { echo "Can't change the directory. Exiting..."; exit 1; }
-  local fw_config="download/Firmware/Marlin/Configuration.h"
+  fw_config="download/Marlin/Configuration.h"
 
   # By default Configuration.h is DOS text file
   dos2unix "$fw_config"
   
   # Prepare firmware configuration
-  sed -i "/CONFIGURATION_H_VERSION/r fw_config/Configuration_Ender3.h" \
-    $fw_config
-
-  # Comment out needless parameters
-  for pattern in \
-    EZABL EXTRAPOLATE CUSTOM_ESTEPS HIGH_TEMP X_HOME Y_HOME LINEAR_ADVANCE; do
-      sed -i "s|^#define $pattern|//&|" $fw_config
-  done
+  patch -d "$VENV_HOME" -p 0 < fw_config/Configuration.patch
 
   # Apply patch for Ender 3 more encoder smoothness
   patch -d "$VENV_HOME" -p 0 < fw_config/Configuration_adv.patch
   patch -d "$VENV_HOME" -p 0 < fw_config/marlinui.patch
 
   # Apply custom boot screen logo
-  cp "fw_config/Ender_bootscreen.h" "download/Firmware/Marlin/_Bootscreen.h"
+  cp "fw_config/Ender_bootscreen.h" "download/Marlin/_Bootscreen.h"
 
   # Build firmware
-  if ! platformio run -e melzi -d download/Firmware/; then
+  if ! platformio run -e STM32F103RE_creality -d download; then
     echo "Firmware build failure. Exiting..."
+    return 1
   fi
-  mv download/Firmware/.pio/build/melzi/firmware.hex \
-    "/tmp/firmware_${FW_VERSION}.hex"
-  echo "Firmware has been successfuly builded: $_"
+
+  fw_path="$(ls download/.pio/build/STM32F103RE_creality/firmware*.bin)"
+  fw_file="$(basename "$fw_path")"
+  cp "$fw_path" /tmp/"$fw_file"
+  
+  echo "Firmware has been successfuly built: $_"
 }
 
 main() {
   prepare_venv
   get_fw
   build_fw
-  read -n1 -r -p $'Do you wish to purge firmware build directory? [y/N]\n' answer
+  read -n1 -r -p $'Do you wish to purge firmware build directory? [Y/n]\n' answer
   case $answer in
-    [Yy] ) echo "Cleaning up ${VENV_HOME}"; purge_venv;;
-    * ) echo "Build directory ${VENV_HOME} has been left untouched"; exit 0;;
+    [Nn] ) echo "Build directory ${VENV_HOME} has been left untouched"; exit 0;;
+    * ) echo "Cleaning up ${VENV_HOME}"; purge_venv;;
   esac
 }
 

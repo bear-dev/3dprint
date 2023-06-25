@@ -14,6 +14,8 @@ I use Ender 3 3D printer which I bought in June 2018 for $238. It was upgraded w
   * NTC Thermistor sensor 100K - 5pcs for $9.89
 * February 2023:
   * Silent main control board v4.2.7 with TMC2225 Driver for $39.99
+* June 2023:
+  * Metal Extruder - $11.99
 
 ## Firmware
 

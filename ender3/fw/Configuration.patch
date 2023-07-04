@@ -105,16 +105,16 @@
 -    #define DEFAULT_Kp_LIST {  22.20,  22.20 }
 -    #define DEFAULT_Ki_LIST {   1.08,   1.08 }
 -    #define DEFAULT_Kd_LIST { 114.00, 114.00 }
-+    #define DEFAULT_Kp_LIST {  21.73,  21.73 }
-+    #define DEFAULT_Ki_LIST {   1.54,   1.54 }
-+    #define DEFAULT_Kd_LIST {  76.55,  76.55 }
++    #define DEFAULT_Kp_LIST {  25.91,  25.91 }
++    #define DEFAULT_Ki_LIST {   1.96,   1.96 }
++    #define DEFAULT_Kd_LIST {  85.51,  85.51 }
    #else
 -    #define DEFAULT_Kp  22.20
 -    #define DEFAULT_Ki   1.08
 -    #define DEFAULT_Kd 114.00
-+    #define DEFAULT_Kp  21.73
-+    #define DEFAULT_Ki   1.54
-+    #define DEFAULT_Kd  76.55
++    #define DEFAULT_Kp  25.91
++    #define DEFAULT_Ki   1.96
++    #define DEFAULT_Kd  85.51
    #endif
  #endif
  
